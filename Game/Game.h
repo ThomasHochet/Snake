@@ -13,7 +13,8 @@ public:
     Game(int screenWidth, int screenHeight, int gridSize, int cellSize);
     void Run();
 private:
-    int screenWidth, screenHeight;
+    int screenWidth, screenHeight, gridSize, cellSize;
+    int score = 0;
     Board board;
     Snake snake;
     Food food;
@@ -25,6 +26,10 @@ private:
     void DrawGameplayScreen();
     void DrawEndingScreen();
     [[nodiscard]] bool CheckCollisionWithFood() const;
+    void DrawLeftSideGameplay();
+    void DrawRightSideGameplay();
+    void DrawScore();
+    void DrawLength();
 };
 
 #endif //SNAKE_GAME_H

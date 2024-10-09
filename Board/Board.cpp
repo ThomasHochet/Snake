@@ -1,4 +1,6 @@
 #include "Board.h"
+
+#include <iostream>
 #include "raylib.h"
 
 Board::Board(int screenWidth, int screenHeight, int gridSize, int cellSize)
@@ -31,10 +33,5 @@ void Board::Draw() const
 
 bool Board::IsInsideBoard(int x, int y) const
 {
-    int gridWidth = gridSize * cellSize;
-    int gridHeight = gridSize * cellSize;
-
-    int offsetX = (screenWidth - gridWidth) / 2;
-    int offsetY = (screenHeight - gridHeight) / 2;
-    return (x >= offsetX && x < (gridWidth + offsetX) && y >= offsetY && y < (gridHeight + offsetY));
+    return (x >= 0 && x < gridSize && y >= 0 && y < gridSize);
 }

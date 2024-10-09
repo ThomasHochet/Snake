@@ -1,17 +1,28 @@
 #include "Snake.h"
 
-Snake::Snake(int startX, int startY, int cellSize) : length(2), cellSize(cellSize), direction(RIGHT)
+Snake::Snake(int startX, int startY, int cellSize) : length(3), cellSize(cellSize), direction(RIGHT)
 {
     body[0] = { static_cast<float>(startX), static_cast<float>(startY) };
 }
 
-void Snake::Draw() const
+void Snake::Draw(int offsetX, int offsetY) const
 {
     for (int i = 0; i < length; i++)
     {
-        DrawRectangle(body[i].x * cellSize, body[i].y * cellSize, cellSize, cellSize, BLACK);
+        DrawRectangle(offsetX + body[i].x * cellSize, offsetY + body[i].y * cellSize, cellSize, cellSize, BLACK);
     }
 }
+
+bool Snake::CheckCollisionWithSelf() const
+{
+    for (int i = 1; i < length; i++)
+    {
+        if (body[0].x == body[i].x && body[0].y == body[i].y)
+            return true;
+    }
+    return false;
+}
+
 
 void Snake::Move()
 {
@@ -36,6 +47,17 @@ void Snake::Grow()
         length++;
     }
 }
+
+void Snake::Reset(int maxX, int maxY)
+{
+    length = 3;
+    body[0] = { static_cast<float>(GetRandomValue(0, maxX)), static_cast<float>(GetRandomValue(0, maxY)) };
+}
+
+int Snake::GetLength() {
+    return length;
+}
+
 
 void Snake::SetDirection(Direction newDir)
 {

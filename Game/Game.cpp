@@ -5,10 +5,13 @@
 #include "../Food/Food.h"
 
 Game::Game(int screenWidth, int screenHeight, int gridSize, int cellSize)
-    : screenWidth(screenWidth), screenHeight(screenHeight),
+    : screenWidth(screenWidth), screenHeight(screenHeight), gridSize(gridSize), cellSize(cellSize),
       board(screenWidth, screenHeight, gridSize, cellSize),
-      snake(screenWidth / (2 * cellSize), screenHeight / (2 * cellSize), cellSize),
-      food(screenWidth / (2 * cellSize) + 1, screenHeight / (2 * cellSize) + 1, cellSize, gridSize)
+      snake(GetRandomValue(0 ,gridSize / 2), GetRandomValue(0, gridSize / 2), cellSize),
+      food(gridSize / 2, gridSize / 2, cellSize, gridSize
+
+
+      )
 {
 
     currentScreen = TITLE;
@@ -30,7 +33,12 @@ void Game::Run()
         switch (currentScreen)
         {
             case TITLE: DrawTitleScreen(); break;
-            case GAMEPLAY: DrawGameplayScreen(); break;
+            case GAMEPLAY: {
+                DrawLeftSideGameplay();
+                DrawGameplayScreen();
+                DrawRightSideGameplay();
+                break;
+            }
             case ENDING: DrawEndingScreen();
         }
 
@@ -47,6 +55,8 @@ void Game::UpdateTitleScreen()
 }
 
 void Game::UpdateGameplayScreen() {
+    int offsetX = (screenWidth - gridSize * cellSize) / 2;
+    int offsetY = (screenHeight - gridSize * cellSize) / 2;
     if (IsKeyPressed(KEY_UP))
         snake.SetDirection(UP);
     if (IsKeyPressed(KEY_DOWN))
@@ -60,9 +70,13 @@ void Game::UpdateGameplayScreen() {
 
     if (CheckCollisionWithFood())
     {
+        score++;
         snake.Grow();
         food.GenerateNewPosition();
     }
+
+    if (snake.CheckCollisionWithSelf())
+        currentScreen = ENDING;
 
     if (!board.IsInsideBoard(snake.GetHeadPosition().x, snake.GetHeadPosition().y))
     {
@@ -72,6 +86,7 @@ void Game::UpdateGameplayScreen() {
 }
 
 void Game::UpdateEndingScreen() {
+    snake.Reset(gridSize / 2, gridSize / 2);
     if (IsKeyPressed(KEY_BACKSPACE))
     {
         currentScreen = TITLE;
@@ -95,9 +110,14 @@ void Game::DrawTitleScreen() {
 }
 
 void Game::DrawGameplayScreen() {
+    int offsetX = (screenWidth - gridSize * cellSize) / 2;
+    int offsetY = (screenHeight - gridSize * cellSize) / 2;
     board.Draw();
-    snake.Draw();
-    food.Draw();
+    snake.Draw(offsetX, offsetY);
+    food.Draw(offsetX, offsetY);
+
+    DrawScore();
+    DrawLength();
 }
 
 void Game::DrawEndingScreen() {
@@ -121,4 +141,26 @@ void Game::DrawEndingScreen() {
 bool Game::CheckCollisionWithFood() const
 {
     return (snake.GetHeadPosition().x == food.GetPosition().x && snake.GetHeadPosition().y == food.GetPosition().y);
+}
+
+void Game::DrawLeftSideGameplay()
+{
+    std::string scoreText = "Score : ";
+    std::string length = "Snake Size : ";
+
+    DrawText(scoreText.c_str(), 30, screenHeight / 2 - 50, 30, BLACK);
+    DrawText(length.c_str(), 30, screenHeight / 2 + 50, 30, BLACK);
+}
+
+void Game::DrawRightSideGameplay()
+{}
+
+void Game::DrawScore()
+{
+    DrawText(std::to_string(score).c_str(), 150, screenHeight / 2 - 50, 30, BLACK);
+}
+
+void Game::DrawLength()
+{
+    DrawText(std::to_string(snake.GetLength()).c_str(), 230, screenHeight / 2 + 50, 30, BLACK);
 }

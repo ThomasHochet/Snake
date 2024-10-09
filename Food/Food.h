@@ -9,7 +9,7 @@ public:
     Food(int boardWidth, int boardHeight, int cellSize, int gridSize);
     void GenerateNewPosition();
     [[nodiscard]] Vector2 GetPosition() const;
-    void Draw() const;
+    void Draw(int offsetX, int offsetY) const;
 private:
     Vector2 position;
     int boardWidth, boardHeight, cellSize, gridSize;

@@ -12,14 +12,15 @@ public:
     void Move();
     void Grow();
     bool CheckCollisionWithSelf() const;
-    bool CheckCollisionWithWalls(int boardWidth, int boardHeight) const;
-    void Draw() const;
+    void Draw(int offsetX, int offsetY) const;
     void SetDirection(Direction newDir);
+    void Reset(int maxX, int maxY);
+    int GetLength();
     Vector2 GetHeadPosition() const;
 private:
+    int length;
     static const int maxSnakeLength = 100; // To start with
     Vector2 body[maxSnakeLength];
-    int length;
     Direction direction;
     int cellSize;
 };
