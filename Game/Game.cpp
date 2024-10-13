@@ -83,6 +83,11 @@ void Game::UpdateGameplayScreen() {
         currentScreen = ENDING;
     }
 
+    if (IsKeyPressed(KEY_BACKSPACE))
+    {
+
+    }
+
 }
 
 void Game::UpdateEndingScreen() {
@@ -153,7 +158,10 @@ void Game::DrawLeftSideGameplay()
 }
 
 void Game::DrawRightSideGameplay()
-{}
+{
+    DrawText("Backspace to Pause.", screenWidth - 330, screenHeight / 2 - 50, 30, BLACK);
+    DrawText("ESC to Quit.", screenWidth - 270, screenHeight / 2 + 50, 30, BLACK);
+}
 
 void Game::DrawScore()
 {
